@@ -11,25 +11,22 @@ interface DatePickerProps {
 export default function DatePicker({ options = {}, onChange }: DatePickerProps) {
   const inputRef = useRef(null);
 
-  useEffect(() => {
-    if (inputRef.current) {
-      const fp = flatpickr(inputRef.current, {
+    useEffect(() => {
+    const input = inputRef.current;
+    if (input) {
+        const fp = flatpickr(input, {
         ...options,
         onChange: (selectedDates, dateStr) => {
-          onChange?.(selectedDates, dateStr);
+            onChange?.(selectedDates, dateStr);
         },
-      });
+        });
 
-      return () => fp.destroy();
-    }
-
-    return () => {
-      if (inputRef.current) {
-        const fp = flatpickr(inputRef.current, options);
+        return () => {
         fp.destroy();
-      }
-    };
-  }, [options, onChange]);
+        };
+    }
+    }, [options, onChange]);
+
 
   return (
     <input

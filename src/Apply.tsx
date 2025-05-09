@@ -4,11 +4,14 @@ import { forwardRef } from "react";
 import DatePicker from "./DatePicker";
 import { Romanian } from "flatpickr/dist/l10n/ro.js"; 
 
-const Apply = forwardRef<HTMLDivElement, {}>((_props, ref) => {
+const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
     // Temporary until API Release
-    const handleDateChange = (_selectedDates: any, dateStr: any) => {
-    console.log("Selected:", dateStr);
-  };
+    const handleDateChange = (
+      _selectedDates: Date[],
+      dateStr: string,
+    ) => {
+      console.log("Selected:", dateStr);
+    };
 
   return (
     <div className="mx-4 md:mx-40 my-20 md:my-40" ref={ref}>

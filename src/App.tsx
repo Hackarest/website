@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 declare global {
   interface Window {
-    dataLayer: any[];
+    dataLayer: unknown[];
   }
 }
 import { Route, Routes } from "react-router-dom";
@@ -61,10 +61,9 @@ function App() {
       document.head.appendChild(script);
 
       window.dataLayer = window.dataLayer || [];
-      function gtag(...args: any[]) {
+      function gtag(...args: unknown[]) {
         window.dataLayer.push(args);
       }
-      // @ts-ignore
       gtag("js", new Date());
       gtag("config", "G-13T3WYF71L");
     }

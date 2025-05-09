@@ -73,7 +73,7 @@ const ActivityCard = ({
   );
 };
 
-const Activities = forwardRef<HTMLDivElement, { onScrollToApply: any }>(
+const Activities = forwardRef<HTMLDivElement, { onScrollToApply: () => void }>(
   ({ onScrollToApply }, ref) => {
     return (
       <div
