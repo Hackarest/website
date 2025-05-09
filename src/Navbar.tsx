@@ -6,8 +6,8 @@ const Navbar = ({
   activeSection,
   onScrollToSection,
 }: {
-  activeSection: any;
-  onScrollToSection: any;
+  activeSection: number | null;
+  onScrollToSection: (index: number) => void;
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -32,7 +32,7 @@ const Navbar = ({
       backdropFilter: scrolled ? "blur(10px)" : "blur(0px)",
       transition: { duration: 0.3, ease: "easeInOut" },
     });
-  }, [scrolled, controls]);
+  }, [scrolled, controls, isMobile]);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);

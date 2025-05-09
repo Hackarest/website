@@ -19,7 +19,7 @@ const teamMembers = [
   },
 ];
 
-const MemberCard = ({ name, role, img, instagram, web }: any) => {
+const MemberCard = ({ name, role, img, instagram, web }: {name: string, role: string, img: string, instagram: string, web?: string}) => {
   return (
     <motion.div
       className="w-64 h-80 bg-gradient-to-br from-[#0f172a] to-[#1e293b] rounded-2xl shadow-xl p-6 flex flex-col items-center text-center transition-transform hover:scale-105 duration-300 border border-[#1e293b]"
@@ -51,7 +51,7 @@ const MemberCard = ({ name, role, img, instagram, web }: any) => {
   );
 };
 
-const Team = forwardRef<HTMLDivElement, {}>((_props, ref) => {
+const Team = forwardRef<HTMLDivElement, object>((_props, ref) => {
   return (
     <div className="w-full py-24 mb-40 text-white px-6 md:px-20" ref={ref}>
       <div className="text-center mb-16 relative">
