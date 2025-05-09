@@ -1,54 +1,49 @@
-# React + TypeScript + Vite
+# Hackarest
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Hackarest** is a programming club dedicated to high school students in Romania, fiscally sponsored by [The Hack Foundation](https://hackclub.com/sponsor/), a US-based nonprofit (501(c)(3), EIN 81-2908499). This website is built with React, TypeScript, and Vite, and serves as the main hub for information, activities, and applications to the club.
 
-Currently, two official plugins are available:
+## What is Hackarest?
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Hackarest is more than just a club—it's a community where code comes to life. Run by high schoolers, for high schoolers, Hackarest is part of the global [Hack Club](https://hackclub.com/) network, but with its own unique, creative, and practical style. Here, you learn, build, and find your team for your next big project. All you need is curiosity and the drive to start.
 
-## Expanding the ESLint configuration
+- **No formalities, no "musts", no limits.**
+- **Focus on real projects, community, and skill-building.**
+- **Events like YSWS (You Ship, We Ship):** Build something real (a website, app, game, or hardware project) and get rewarded—no contests, just initiative and the courage to finish what you start.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Features
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+- **Activities:** Discover ongoing and past activities, including project-based challenges and rewards.
+- **Apply:** Join the club by filling out a simple application form.
+- **Team:** Meet the passionate and dedicated team behind Hackarest.
+- **Sponsors:** Supported by organizations like Hack Club and GitHub Education.
+- **Legal & Privacy:** Transparent terms, privacy, and cookie policies.
+
+## Tech Stack
+
+- **Frontend:** React 19, TypeScript, Vite
+- **Styling:** Tailwind CSS, custom animations
+- **UI Components:** Framer Motion, custom MagicUI components
+- **Other:** Google Analytics (with cookie consent), Cloudflare protection
+
+## Development
+
+### Install dependencies
+
+```sh
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    "react-x": reactX,
-    "react-dom": reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs["recommended-typescript"].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
+### Start development server 
+```sh
+npm run dev
 ```
+
+### Build for production
+```sh
+npm run build
+```
+
+## License
+See [LICENSE](LICENSE)
+
+**It is strictly prohibited to use this website or any of its content without explicit permission. This website and all its materials are under copyright by Hackarest. All rights reserved.**
