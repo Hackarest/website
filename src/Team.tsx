@@ -14,7 +14,7 @@ const teamMembers = [
     name: "Capotă Cristian",
     role: "Co-Fondator",
     img: "https://media.cristoi.ro/images/pfp.png",
-    instagram: "https://linkedin.com/in/ion",
+    instagram: "https://instagram.com/_cristoi",
     web: "https://cristoi.ro/",
   },
 ];
