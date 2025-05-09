@@ -1,8 +1,15 @@
 import Hackapply from "@/assets/Apply.webm";
 import { motion } from "framer-motion";
 import { forwardRef } from "react";
+import DatePicker from "./DatePicker";
+import { Romanian } from "flatpickr/dist/l10n/ro.js"; 
 
 const Apply = forwardRef<HTMLDivElement, {}>((_props, ref) => {
+    // Temporary until API Release
+    const handleDateChange = (_selectedDates: any, dateStr: any) => {
+    console.log("Selected:", dateStr);
+  };
+
   return (
     <div className="mx-4 md:mx-40 my-20 md:my-40" ref={ref}>
       <div className="w-full flex flex-col items-center justify-center text-center">
@@ -58,6 +65,16 @@ const Apply = forwardRef<HTMLDivElement, {}>((_props, ref) => {
                 name="email"
                 placeholder="ex: tu@email.com"
                 className="bg-primary text-white text-sm placeholder:text-muted-foreground px-4 py-3 rounded-lg border border-transparent focus:border-[#00d8ff] outline-none transition-all duration-200"
+              />
+            </label>
+
+            <label className="flex flex-col gap-2">
+              <span className="text-sm text-muted-foreground">
+                Data nașterii
+              </span>
+               <DatePicker
+                onChange={handleDateChange}
+                options={{ dateFormat: "d/m/Y", locale: Romanian, }} 
               />
             </label>
 
