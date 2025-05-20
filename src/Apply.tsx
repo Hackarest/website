@@ -1,18 +1,79 @@
 import Hackapply from "@/assets/Apply.webm";
 import { motion } from "framer-motion";
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import DatePicker from "./DatePicker";
 import { Romanian } from "flatpickr/dist/l10n/ro.js"; 
+import { useAuth } from "@clerk/clerk-react";
 
 const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
-    // Temporary until API Release
     const handleDateChange = (
       _selectedDates: Date[],
       dateStr: string,
     ) => {
-      console.log("Selected:", dateStr);
+      setDate(dateStr)
     };
+    const { getToken } = useAuth();
 
+    const [name, setName] = useState<string | null>(null);
+    const [email, setEmail] = useState<string | null>(null);
+    const [date, setDate] = useState<string | null>(null);
+    const [about, setAbout] = useState<string | null>(null);
+    const [isEmailValid, setIsEmailValid] = useState(true);
+    const [error, setError] = useState(false)
+    const [sent, setSent] = useState(false);
+
+    const handleEmailChange = (e: any) => {
+        const value = e.target.value;
+        setEmail(value);
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        setIsEmailValid(emailRegex.test(value));
+     };
+    async function sendData(event: React.FormEvent) {
+      event.preventDefault(); 
+      if(name == null || email == null || about == null || date == null || !isEmailValid ) return;
+      try {
+      const token = await getToken();
+      const formattedDate = date.split("/").join("-"); 
+      const response = await fetch("https://api.hackarest.ro/api/apply", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body:  JSON.stringify({ 
+          name,
+          email,
+          about,
+          dob: formattedDate,
+        }),
+      });
+      if (response.ok) {
+       setName(null);
+       setEmail(null);
+       setAbout(null)
+       setDate(null);
+       setSent(true);
+      setTimeout(() => {
+       setSent(false);
+      }, 4000)
+    } else {
+      setError(true)
+       setName(null);
+       setEmail(null);
+       setAbout(null)
+       setDate(null)
+      setTimeout(() => {
+       setError(false)
+      }, 4000)
+    }
+      
+  } catch {
+      setError(true)
+      setTimeout(() => {
+       setError(false)
+      }, 4000)
+    }
+    }
   return (
     <div className="mx-4 md:mx-40 my-20 md:my-40" ref={ref}>
       <div className="w-full flex flex-col items-center justify-center text-center">
@@ -55,6 +116,8 @@ const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
                 type="text"
                 name="name"
                 placeholder="ex: Andrei Popescu"
+                value={name ?? ""}
+                onChange={(e) => setName(e.target.value)}
                 className="bg-primary text-white text-sm placeholder:text-muted-foreground px-4 py-3 rounded-lg border border-transparent focus:border-[#00d8ff] outline-none transition-all duration-200"
               />
             </label>
@@ -66,9 +129,17 @@ const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
               <input
                 type="email"
                 name="email"
-                placeholder="ex: tu@email.com"
-                className="bg-primary text-white text-sm placeholder:text-muted-foreground px-4 py-3 rounded-lg border border-transparent focus:border-[#00d8ff] outline-none transition-all duration-200"
+                value={email ?? ""}
+                placeholder="tu@companie.ro"
+                onChange={handleEmailChange}
+                className={`bg-primary text-white text-sm placeholder:text-muted-foreground px-4 py-3 rounded-lg border ${
+                  isEmailValid ? "border-transparent" : "border-red-500"
+                } focus:border-[#00d8ff] outline-none transition-all duration-200`}
               />
+
+              {!isEmailValid && email && (
+                <span className="text-red-400 text-sm">Email invalid</span>
+              )}
             </label>
 
             <label className="flex flex-col gap-2">
@@ -76,8 +147,9 @@ const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
                 Data nașterii
               </span>
                <DatePicker
+                value={date ?? ""}
                 onChange={handleDateChange}
-                options={{ dateFormat: "d/m/Y", locale: Romanian, }} 
+                options={{ dateFormat: "d/m/Y", locale: Romanian }}
               />
             </label>
 
@@ -87,17 +159,27 @@ const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
                 rows={6}
                 name="message"
                 placeholder="Ce îți place să faci? Ce te pasionează?"
+                value={about ?? ""}
+                onChange={(e) => setAbout(e.target.value)}
                 className="bg-primary text-white text-sm placeholder:text-muted-foreground px-4 py-3 rounded-lg border border-transparent focus:border-[#00d8ff] outline-none transition-all duration-200 resize-none"
               />
             </label>
-
+           <h1
+              className={`text-sm text-center font-medium text-${error ? "red" : "green"}-400 transition-opacity duration-200 ${
+                error || sent ? "opacity-100 visible" : "opacity-0 invisible"
+              }`}
+            >
+              &gt; {error ? "A apărut o eroare. Încearcă mai târziu" : "200 OK - Aplicație trimisă"}
+            </h1>
             <button
               type="submit"
               className="mt-4 bg-[#00d8ff]/10 hover:bg-[#00d8ff]/20 text-[#00d8ff] font-semibold px-6 py-3 rounded-lg transition duration-200 border border-[#00d8ff]/30 hover:border-[#00d8ff]"
+              onClick={sendData}
             >
               Trimite
             </button>
           </form>
+
         </motion.div>
 
         <motion.div

@@ -169,9 +169,9 @@ const TerminalScreen = () => {
 
         <AnimatedSpan delay={3000} className="text-white">
           <span>
-            Slack ➜{" "}
+            Linktree ➜{" "}
             <a
-              href="https://slack.com/hackarest"
+              href="https://linktr.ee/hackarest"
               target="_blank"
               className="text-[#58a6ff] hover:underline"
             >

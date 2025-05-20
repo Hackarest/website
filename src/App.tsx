@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Route, Routes } from "react-router-dom";
-import CookieConsent, { getCookieConsentValue } from "react-cookie-consent";
-import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
-import { SignIn, SignUp, RedirectToUserProfile } from "@clerk/clerk-react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { SignedIn, SignedOut, RedirectToSignIn, useUser } from "@clerk/clerk-react";
+import { SignIn } from "@clerk/clerk-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 declare global {
   interface Window {
@@ -21,7 +21,8 @@ import PrivacyPolicy from "./Privacy";
 import CookiePolicy from "./Cookie";
 import Team from "./Team";
 import Dashboard from "./Dashboard";
-import Applicants from "./Applicants";
+import UserPage from "./User";
+
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -34,9 +35,28 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+const ManagerRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isLoaded, user } = useUser();
+
+  if (!isLoaded) {
+    return null;
+  }
+
+  if (!user) {
+    return <RedirectToSignIn />;
+  }
+
+  if (user.publicMetadata?.role !== "admin") {
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
+};
+
 
 
 function App() {
+  
   const [activeSection, setActiveSection] = useState<number | null>(null);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -70,9 +90,32 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
+  const [cookieConsent, setCookieConsent] = useState(false);
+  const [cookiePopup, setCookiePopup] = useState(false);
+
+  const acceptCookie = () => {
+    setCookieConsent(true);
+    localStorage.setItem('cookieAccepted', 'true');
+    setCookiePopup(false)
+  }
+
+  const denyCookie = () => {
+    setCookieConsent(false);
+    localStorage.setItem('cookieAccepted', 'false');
+    setCookiePopup(false);
+  }
+
   useEffect(() => {
-    const consent = getCookieConsentValue();
-    if (consent === "true") {
+    let cookieAccepted = localStorage.getItem('cookieAccepted')
+    if(cookieAccepted === null) {
+      setCookiePopup(true);
+    } else if(cookieAccepted == "true") {
+      setCookieConsent(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (cookieConsent === true) {
       const script = document.createElement("script");
       script.src = "https://www.googletagmanager.com/gtag/js?id=G-13T3WYF71L";
       script.async = true;
@@ -85,7 +128,7 @@ function App() {
       gtag("js", new Date());
       gtag("config", "G-13T3WYF71L");
     }
-  }, []);
+  }, [cookieConsent]);
 
 const hackarestAppearance = {
   variables: {
@@ -174,32 +217,47 @@ const hackarestAppearance = {
 
   return (
     <>
-      <CookieConsent
-        location="bottom"
-        buttonText="Accept"
-        declineButtonText="Refuz"
-        enableDeclineButton
-        onAccept={() => window.location.reload()}
-        onDecline={() => window.location.reload()}
-        style={{ background: "#101418" }}
-        buttonStyle={{
-          color: "#fff",
-          background: "#17c964",
-          fontSize: "13px",
-          borderRadius: 5,
-        }}
-        declineButtonStyle={{
-          color: "#fff",
-          background: "#f31260",
-          fontSize: "13px",
-          borderRadius: 5,
-        }}
-      >
-        Acest site folosește cookie-uri pentru a-ți îmbunătăți experiența.{" "}
-        <a href="/cookie" className="font-extrabold">
-          Află mai multe
-        </a>
-      </CookieConsent>
+      <AnimatePresence>
+        {cookiePopup && (
+          <motion.div
+            className="fixed right-5 bottom-4 w-[90%] max-w-sm rounded-xl shadow-lg border border-white/20 overflow-hidden z-[150]"
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 25 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+          >
+            <div
+              className="flex flex-col p-3 text-black"
+              style={{ backgroundColor: "rgba(16, 20, 24, 0.98)" }}
+            >
+              <h1 className="font-bold text-base text-white text-center mb-1">
+                Despre cookie-uri
+              </h1>
+              <span className="text-sm text-white text-center px-2">
+                Acest site folosește cookie-uri pentru a îți îmbunătăți experiența și a analiza traficul.
+              </span>
+              <div className="w-full mt-3 flex items-center justify-evenly gap-2 px-2">
+                <button
+                  className="cursor-pointer bg-[#00d8ff] rounded-md py-1 px-2 text-sm font-bold w-full"
+                  onClick={acceptCookie}
+                >
+                  Accept
+                </button>
+                <button
+                  className="cursor-pointer border border-[#00d8ff] text-white rounded-md py-1 px-2 text-sm font-bold w-full"
+                  onClick={denyCookie}
+                >
+                  Refuz
+                </button>
+              </div>
+              <span className="text-gray-400 text-xs text-center mt-2 px-2">
+                Vezi <a href="/privacy" target="_blank" className="underline">politica noastră de confidențialitate</a>
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
 
       <Routes>
         <Route
@@ -248,29 +306,23 @@ const hackarestAppearance = {
           }
         />
         <Route
-          path="/sign-up/*"
-          element={
-          <div className="h-screen w-full flex items-center justify-center">
-              <SignUp routing="path" path="/sign-up" appearance={hackarestAppearance} />
-          </div>
-          }
-        />
-
-        <Route
         path="/dashboard"
         element={
-          <PrivateRoute>
+          <ManagerRoute>
             <Dashboard />
+          </ManagerRoute>
+        }
+      />
+
+       <Route
+        path="/user"
+        element={
+          <PrivateRoute>
+            <UserPage />
           </PrivateRoute>
         }
       />
 
-      <Route
-        path="/applicants"
-        element={
-          <Applicants />
-        }
-        />
       </Routes>
     </>
   );
