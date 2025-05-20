@@ -49,7 +49,10 @@ const ManagerRoute = ({ children }: { children: React.ReactNode }) => {
     return <RedirectToSignIn />;
   }
 
-  if (user.publicMetadata?.role !== "admin") {
+  if (
+    user.publicMetadata?.role !== "admin" &&
+    user.publicMetadata?.role !== "manager"
+  ) {
     return <Navigate to="/" replace />;
   }
 
