@@ -19,7 +19,19 @@ const teamMembers = [
   },
 ];
 
-const MemberCard = ({ name, role, img, instagram, web }: {name: string, role: string, img: string, instagram: string, web?: string}) => {
+const MemberCard = ({
+  name,
+  role,
+  img,
+  instagram,
+  web,
+}: {
+  name: string;
+  role: string;
+  img: string;
+  instagram: string;
+  web?: string;
+}) => {
   return (
     <motion.div
       className="w-64 h-80 bg-gradient-to-br from-[#0f172a] to-[#1e293b] rounded-2xl shadow-xl p-6 flex flex-col items-center text-center transition-transform hover:scale-105 duration-300 border border-[#1e293b]"

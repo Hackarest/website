@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { SignedIn, SignedOut, RedirectToSignIn, useUser } from "@clerk/clerk-react";
+import {
+  SignedIn,
+  SignedOut,
+  RedirectToSignIn,
+  useUser,
+} from "@clerk/clerk-react";
 import { SignIn } from "@clerk/clerk-react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -9,7 +14,6 @@ declare global {
     dataLayer: unknown[];
   }
 }
-
 
 import Activities from "./Activities";
 import Apply from "./Apply";
@@ -22,7 +26,6 @@ import CookiePolicy from "./Cookie";
 import Team from "./Team";
 import Dashboard from "./Dashboard";
 import UserPage from "./User";
-
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -53,10 +56,7 @@ const ManagerRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-
-
 function App() {
-  
   const [activeSection, setActiveSection] = useState<number | null>(null);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -95,24 +95,24 @@ function App() {
 
   const acceptCookie = () => {
     setCookieConsent(true);
-    localStorage.setItem('cookieAccepted', 'true');
-    setCookiePopup(false)
-  }
+    localStorage.setItem("cookieAccepted", "true");
+    setCookiePopup(false);
+  };
 
   const denyCookie = () => {
     setCookieConsent(false);
-    localStorage.setItem('cookieAccepted', 'false');
+    localStorage.setItem("cookieAccepted", "false");
     setCookiePopup(false);
-  }
+  };
 
   useEffect(() => {
-    let cookieAccepted = localStorage.getItem('cookieAccepted')
-    if(cookieAccepted === null) {
+    let cookieAccepted = localStorage.getItem("cookieAccepted");
+    if (cookieAccepted === null) {
       setCookiePopup(true);
-    } else if(cookieAccepted == "true") {
-      setCookieConsent(true)
+    } else if (cookieAccepted == "true") {
+      setCookieConsent(true);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (cookieConsent === true) {
@@ -130,90 +130,89 @@ function App() {
     }
   }, [cookieConsent]);
 
-const hackarestAppearance = {
-  variables: {
-    colorPrimary: "#00d8ff", 
-    colorBackground: "#0e1217", 
-    colorText: "#f1f5f9", 
-    colorTextSecondary: "#a3a3a3", 
-    fontFamily: "'Space Grotesk', 'Inter', sans-serif",
-    borderRadius: "0.75rem",
-    shadow: "0 4px 32px 0 rgba(0, 216, 255, 0.10)",
-  },
-  elements: {
-    card: {
-      backgroundColor: "#181c23", 
-      backdropFilter: "blur(8px)",
-      padding: "2rem",
-      boxShadow: "0 4px 32px 0 rgba(0, 216, 255, 0.10)",
-      border: "1px solid #23272f",
+  const hackarestAppearance = {
+    variables: {
+      colorPrimary: "#00d8ff",
+      colorBackground: "#0e1217",
+      colorText: "#f1f5f9",
+      colorTextSecondary: "#a3a3a3",
+      fontFamily: "'Space Grotesk', 'Inter', sans-serif",
+      borderRadius: "0.75rem",
+      shadow: "0 4px 32px 0 rgba(0, 216, 255, 0.10)",
     },
-    headerTitle: {
-      color: "#00d8ff",
-      fontWeight: "800",
-      letterSpacing: "0.01em",
+    elements: {
+      card: {
+        backgroundColor: "#181c23",
+        backdropFilter: "blur(8px)",
+        padding: "2rem",
+        boxShadow: "0 4px 32px 0 rgba(0, 216, 255, 0.10)",
+        border: "1px solid #23272f",
+      },
+      headerTitle: {
+        color: "#00d8ff",
+        fontWeight: "800",
+        letterSpacing: "0.01em",
+      },
+      headerSubtitle: {
+        color: "#a3a3a3",
+        fontWeight: "500",
+      },
+      socialButtonsBlockButton: {
+        backgroundColor: "#23272f",
+        color: "#f1f5f9",
+        borderRadius: "0.5rem",
+        border: "1px solid #23272f",
+      },
+      socialButtonsBlockButton__providerName: {
+        color: "#f1f5f9",
+      },
+      formFieldInput: {
+        backgroundColor: "#14181f",
+        color: "#f1f5f9",
+        borderColor: "#1e293b",
+        borderRadius: "0.5rem",
+        fontWeight: "500",
+      },
+      formButtonPrimary: {
+        backgroundColor: "#00d8ff",
+        color: "#0e1217",
+        fontWeight: "700",
+        borderRadius: "0.5rem",
+        boxShadow: "0 2px 8px 0 rgba(0, 216, 255, 0.15)",
+        border: "1px solid #00d8ff",
+      },
+      formButtonPrimary__hover: {
+        backgroundColor: "#17c964",
+        color: "#0e1217",
+        border: "1px solid #17c964",
+      },
+      footer: {
+        color: "#a3a3a3",
+        fontSize: "0.95rem",
+      },
+      formFieldLabel: {
+        color: "#a3a3a3",
+        fontWeight: "600",
+      },
+      formFieldHintText: {
+        color: "#00d8ff",
+        fontSize: "0.9rem",
+      },
+      formFieldErrorText: {
+        color: "#f31260",
+        fontWeight: "600",
+      },
+      dividerLine: {
+        backgroundColor: "#00d8ff",
+      },
+      alternativeMethodsBlockButtonText: {
+        color: "#00d8ff",
+      },
+      alternativeMethodsBlockButton: {
+        color: "#0e1217",
+      },
     },
-    headerSubtitle: {
-      color: "#a3a3a3",
-      fontWeight: "500",
-    },
-    socialButtonsBlockButton: {
-      backgroundColor: "#23272f",
-      color: "#f1f5f9",
-      borderRadius: "0.5rem",
-      border: "1px solid #23272f",
-    },
-    socialButtonsBlockButton__providerName: {
-      color: "#f1f5f9",
-    },
-    formFieldInput: {
-      backgroundColor: "#14181f",
-      color: "#f1f5f9",
-      borderColor: "#1e293b",
-      borderRadius: "0.5rem",
-      fontWeight: "500",
-    },
-    formButtonPrimary: {
-      backgroundColor: "#00d8ff",
-      color: "#0e1217",
-      fontWeight: "700",
-      borderRadius: "0.5rem",
-      boxShadow: "0 2px 8px 0 rgba(0, 216, 255, 0.15)",
-      border: "1px solid #00d8ff",
-    },
-    formButtonPrimary__hover: {
-      backgroundColor: "#17c964", 
-      color: "#0e1217",
-      border: "1px solid #17c964",
-    },
-    footer: {
-      color: "#a3a3a3",
-      fontSize: "0.95rem",
-    },
-    formFieldLabel: {
-      color: "#a3a3a3",
-      fontWeight: "600",
-    },
-    formFieldHintText: {
-      color: "#00d8ff",
-      fontSize: "0.9rem",
-    },
-    formFieldErrorText: {
-      color: "#f31260", 
-      fontWeight: "600",
-    },
-    dividerLine: {
-      backgroundColor: "#00d8ff"
-    },
-    alternativeMethodsBlockButtonText: {
-      color: "#00d8ff"
-    },
-    alternativeMethodsBlockButton: {
-      color: "#0e1217"
-    },
-
-  },
-};
+  };
 
   return (
     <>
@@ -234,7 +233,8 @@ const hackarestAppearance = {
                 Despre cookie-uri
               </h1>
               <span className="text-sm text-white text-center px-2">
-                Acest site folosește cookie-uri pentru a îți îmbunătăți experiența și a analiza traficul.
+                Acest site folosește cookie-uri pentru a îți îmbunătăți
+                experiența și a analiza traficul.
               </span>
               <div className="w-full mt-3 flex items-center justify-evenly gap-2 px-2">
                 <button
@@ -251,13 +251,15 @@ const hackarestAppearance = {
                 </button>
               </div>
               <span className="text-gray-400 text-xs text-center mt-2 px-2">
-                Vezi <a href="/privacy" target="_blank" className="underline">politica noastră de confidențialitate</a>
+                Vezi{" "}
+                <a href="/privacy" target="_blank" className="underline">
+                  politica noastră de confidențialitate
+                </a>
               </span>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-
 
       <Routes>
         <Route
@@ -300,29 +302,32 @@ const hackarestAppearance = {
         <Route
           path="/sign-in/*"
           element={
-          <div className="h-screen w-full flex items-center justify-center">
-              <SignIn routing="path" path="/sign-in" appearance={hackarestAppearance} />
-          </div>
+            <div className="h-screen w-full flex items-center justify-center">
+              <SignIn
+                routing="path"
+                path="/sign-in"
+                appearance={hackarestAppearance}
+              />
+            </div>
           }
         />
         <Route
-        path="/dashboard"
-        element={
-          <ManagerRoute>
-            <Dashboard />
-          </ManagerRoute>
-        }
-      />
+          path="/dashboard"
+          element={
+            <ManagerRoute>
+              <Dashboard />
+            </ManagerRoute>
+          }
+        />
 
-       <Route
-        path="/user"
-        element={
-          <PrivateRoute>
-            <UserPage />
-          </PrivateRoute>
-        }
-      />
-
+        <Route
+          path="/user"
+          element={
+            <PrivateRoute>
+              <UserPage />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </>
   );

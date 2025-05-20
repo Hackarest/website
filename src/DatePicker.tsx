@@ -9,15 +9,23 @@ interface DatePickerProps {
   value?: string;
 }
 
-export default function DatePicker({ options = {}, onChange, value }: DatePickerProps) {
+export default function DatePicker({
+  options = {},
+  onChange,
+  value,
+}: DatePickerProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const input = inputRef.current;
     if (input) {
       const today = new Date();
-      const maxDate = today.toISOString()
-      const minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
+      const maxDate = today.toISOString();
+      const minDate = new Date(
+        today.getFullYear() - 18,
+        today.getMonth(),
+        today.getDate(),
+      );
 
       const fp = flatpickr(input, {
         ...options,

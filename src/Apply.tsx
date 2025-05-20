@@ -2,45 +2,49 @@ import Hackapply from "@/assets/Apply.webm";
 import { motion } from "framer-motion";
 import { forwardRef, useState } from "react";
 import DatePicker from "./DatePicker";
-import { Romanian } from "flatpickr/dist/l10n/ro.js"; 
+import { Romanian } from "flatpickr/dist/l10n/ro.js";
 import { useAuth } from "@clerk/clerk-react";
 
 const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
-    const handleDateChange = (
-      _selectedDates: Date[],
-      dateStr: string,
-    ) => {
-      setDate(dateStr)
-    };
-    const { getToken } = useAuth();
+  const handleDateChange = (_selectedDates: Date[], dateStr: string) => {
+    setDate(dateStr);
+  };
+  const { getToken } = useAuth();
 
-    const [name, setName] = useState<string | null>(null);
-    const [email, setEmail] = useState<string | null>(null);
-    const [date, setDate] = useState<string | null>(null);
-    const [about, setAbout] = useState<string | null>(null);
-    const [isEmailValid, setIsEmailValid] = useState(true);
-    const [error, setError] = useState(false)
-    const [sent, setSent] = useState(false);
+  const [name, setName] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+  const [date, setDate] = useState<string | null>(null);
+  const [about, setAbout] = useState<string | null>(null);
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [error, setError] = useState(false);
+  const [sent, setSent] = useState(false);
 
-    const handleEmailChange = (e: any) => {
-        const value = e.target.value;
-        setEmail(value);
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        setIsEmailValid(emailRegex.test(value));
-     };
-    async function sendData(event: React.FormEvent) {
-      event.preventDefault(); 
-      if(name == null || email == null || about == null || date == null || !isEmailValid ) return;
-      try {
+  const handleEmailChange = (e: any) => {
+    const value = e.target.value;
+    setEmail(value);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setIsEmailValid(emailRegex.test(value));
+  };
+  async function sendData(event: React.FormEvent) {
+    event.preventDefault();
+    if (
+      name == null ||
+      email == null ||
+      about == null ||
+      date == null ||
+      !isEmailValid
+    )
+      return;
+    try {
       const token = await getToken();
-      const formattedDate = date.split("/").join("-"); 
+      const formattedDate = date.split("/").join("-");
       const response = await fetch("https://api.hackarest.ro/api/apply", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body:  JSON.stringify({ 
+        body: JSON.stringify({
           name,
           email,
           about,
@@ -48,32 +52,31 @@ const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
         }),
       });
       if (response.ok) {
-       setName(null);
-       setEmail(null);
-       setAbout(null)
-       setDate(null);
-       setSent(true);
+        setName(null);
+        setEmail(null);
+        setAbout(null);
+        setDate(null);
+        setSent(true);
+        setTimeout(() => {
+          setSent(false);
+        }, 4000);
+      } else {
+        setError(true);
+        setName(null);
+        setEmail(null);
+        setAbout(null);
+        setDate(null);
+        setTimeout(() => {
+          setError(false);
+        }, 4000);
+      }
+    } catch {
+      setError(true);
       setTimeout(() => {
-       setSent(false);
-      }, 4000)
-    } else {
-      setError(true)
-       setName(null);
-       setEmail(null);
-       setAbout(null)
-       setDate(null)
-      setTimeout(() => {
-       setError(false)
-      }, 4000)
+        setError(false);
+      }, 4000);
     }
-      
-  } catch {
-      setError(true)
-      setTimeout(() => {
-       setError(false)
-      }, 4000)
-    }
-    }
+  }
   return (
     <div className="mx-4 md:mx-40 my-20 md:my-40" ref={ref}>
       <div className="w-full flex flex-col items-center justify-center text-center">
@@ -146,7 +149,7 @@ const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
               <span className="text-sm text-muted-foreground">
                 Data nașterii
               </span>
-               <DatePicker
+              <DatePicker
                 value={date ?? ""}
                 onChange={handleDateChange}
                 options={{ dateFormat: "d/m/Y", locale: Romanian }}
@@ -164,12 +167,15 @@ const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
                 className="bg-primary text-white text-sm placeholder:text-muted-foreground px-4 py-3 rounded-lg border border-transparent focus:border-[#00d8ff] outline-none transition-all duration-200 resize-none"
               />
             </label>
-           <h1
+            <h1
               className={`text-sm text-center font-medium text-${error ? "red" : "green"}-400 transition-opacity duration-200 ${
                 error || sent ? "opacity-100 visible" : "opacity-0 invisible"
               }`}
             >
-              &gt; {error ? "A apărut o eroare. Încearcă mai târziu" : "200 OK - Aplicație trimisă"}
+              &gt;{" "}
+              {error
+                ? "A apărut o eroare. Încearcă mai târziu"
+                : "200 OK - Aplicație trimisă"}
             </h1>
             <button
               type="submit"
@@ -179,7 +185,6 @@ const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
               Trimite
             </button>
           </form>
-
         </motion.div>
 
         <motion.div
