@@ -33,17 +33,20 @@ Hackarest is more than just a club—it's a community where code comes to life. 
 npm install
 ```
 
-### Start development server 
+### Start development server
+
 ```sh
 npm run dev
 ```
 
 ### Build for production
+
 ```sh
 npm run build
 ```
 
 ## License
+
 See [LICENSE](LICENSE)
 
 **It is strictly prohibited to use this website or any of its content without explicit permission. This website and all its materials are under copyright by Hackarest. All rights reserved.**

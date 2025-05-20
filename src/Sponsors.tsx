@@ -14,7 +14,7 @@ const sponsors = [
   },
   {
     img: "https://assets.hackclub.com/hcb-light.svg",
-    link: "https://hcb.hackclub.com/",
+    link: "https://hcb.hackclub.com/hackarest",
     alt: "HCB",
   },
 ];
