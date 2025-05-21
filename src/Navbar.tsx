@@ -117,14 +117,14 @@ const Navbar = ({
                 Echipă
               </motion.span>
             </div>
-            {!isMobile && !isLoaded && !isSignedIn && (
+            {!isMobile && isLoaded && isSignedIn && (
               <motion.span
                 className={`hidden md:block cursor-pointer hover:text-white transition font-extralight ${
                   userModal ? "text-white" : "text-gray-300"
                 }`}
                 onClick={() => setUserModal(!userModal)}
               >
-                Capota Cristian
+                {user?.fullName}
               </motion.span>
             )}
             <AnimatePresence>
