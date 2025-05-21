@@ -12,6 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 declare global {
   interface Window {
     dataLayer: unknown[];
+    gtag: (...args: any[]) => void;
   }
 }
 
@@ -119,17 +120,23 @@ function App() {
 
   useEffect(() => {
     if (cookieConsent === true) {
-      const script = document.createElement("script");
-      script.src = "https://www.googletagmanager.com/gtag/js?id=G-13T3WYF71L";
-      script.async = true;
-      document.head.appendChild(script);
-
-      window.dataLayer = window.dataLayer || [];
-      function gtag(...args: unknown[]) {
-        window.dataLayer.push(args);
+      if (!document.getElementById("gtag-js")) {
+        const script = document.createElement("script");
+        script.src = "https://www.googletagmanager.com/gtag/js?id=G-13T3WYF71L";
+        script.async = true;
+        script.id = "gtag-js";
+        script.onload = () => {
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () {
+            window.dataLayer.push(arguments);
+          };
+          window.gtag("js", new Date());
+          window.gtag("config", "G-13T3WYF71L");
+        };
+        document.head.appendChild(script);
+      } else {
+        window.gtag("config", "G-13T3WYF71L");
       }
-      gtag("js", new Date());
-      gtag("config", "G-13T3WYF71L");
     }
   }, [cookieConsent]);
 
