@@ -31,6 +31,7 @@ export default function DatePicker({
         ...options,
         maxDate,
         minDate,
+        disableMobile: true,
         onChange: (selectedDates, dateStr) => {
           onChange?.(selectedDates, dateStr);
         },
@@ -51,7 +52,7 @@ export default function DatePicker({
       ref={inputRef}
       value={value ?? ""}
       readOnly
-      className="bg-primary text-white text-sm placeholder:text-muted-foreground px-4 py-3 rounded-lg border border-transparent focus:border-[#00d8ff] outline-none transition-all duration-200"
+      className="[appearance:none] bg-primary text-white text-sm placeholder:text-muted-foreground px-4 py-3 rounded-lg border border-transparent focus:border-[#00d8ff] outline-none transition-all duration-200"
       placeholder="Selectează o dată"
     />
   );
