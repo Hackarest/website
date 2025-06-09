@@ -10,7 +10,9 @@ export default function Dashboard() {
   const { getToken } = useAuth();
   const [applicants, setApplicants] = useState<any | null>(null);
   const [showReasonPopup, setShowReasonPopup] = useState(false);
-  const [selectedApplicant, setSelectedApplicant] = useState<any>(null);
+  const [selectedApplicant, setSelectedApplicant] = useState<any | null>(
+    null,
+  );
   const [denyReason, setDenyReason] = useState("");
   const [activeNotification, setActiveNotification] = useState<
     [string, string, string] | null
@@ -34,7 +36,8 @@ export default function Dashboard() {
 
   const refreshData = async () => {
     const token = await getToken();
-    const response = await fetch("https://api.hackarest.ro/api/applications", {
+    const API_DOMAIN = import.meta.env.VITE_API_DOMAIN;
+    const response = await fetch(`${API_DOMAIN}/api/applications`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -56,7 +59,8 @@ export default function Dashboard() {
     reason = "Motivul nu a fost specificat",
   ) => {
     const token = await getToken();
-    const response = await fetch(`https://api.hackarest.ro/api/${action}`, {
+    const API_DOMAIN = import.meta.env.VITE_API_DOMAIN;
+    const response = await fetch(`${API_DOMAIN}/api/${action}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -100,16 +104,18 @@ export default function Dashboard() {
   }, []);
 
   function calculateAge(dobStr: string) {
-    const [day, month, year] = dobStr.split("-").map(Number);
-    const dob = new Date(year, month - 1, day);
+    const dob = new Date(dobStr);
     const now = new Date();
+
     let years = now.getFullYear() - dob.getFullYear();
     let months = now.getMonth() - dob.getMonth();
+
     if (now.getDate() < dob.getDate()) months--;
     if (months < 0) {
       years--;
       months += 12;
     }
+
     return { years, months };
   }
 
@@ -363,7 +369,12 @@ function Section({
                   </p>
                   <p className="text-sm text-gray-300 mb-1">
                     <span className="font-semibold">Data nașterii:</span>{" "}
-                    {person.dob} ({age.years} ani și{" "}
+                    {new Date(person.dob).toLocaleDateString("ro-RO", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}{" "}
+                    ({age.years} ani și{" "}
                     {age.months === 1 ? "o lună" : `${age.months} luni`})
                   </p>
                   <p className="text-sm text-gray-300 mt-4">

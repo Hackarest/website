@@ -6,8 +6,9 @@ import { Romanian } from "flatpickr/dist/l10n/ro.js";
 import { useAuth } from "@clerk/clerk-react";
 
 const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
-  const handleDateChange = (_selectedDates: Date[], dateStr: string) => {
-    setDate(dateStr);
+  const handleDateChange = (_selectedDates: Date[]) => {
+    const dateOnly = _selectedDates[0].toISOString().split("T")[0];
+    setDate(dateOnly);
   };
   const { getToken } = useAuth();
 
@@ -19,7 +20,7 @@ const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
   const [error, setError] = useState(false);
   const [sent, setSent] = useState(false);
 
-  const handleEmailChange = (e: any) => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -37,8 +38,8 @@ const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
       return;
     try {
       const token = await getToken();
-      const formattedDate = date.split("/").join("-");
-      const response = await fetch("https://api.hackarest.ro/api/apply", {
+      const API_DOMAIN = import.meta.env.VITE_API_DOMAIN;
+      const response = await fetch(`${API_DOMAIN}/api/apply`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -48,7 +49,7 @@ const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
           name,
           email,
           about,
-          dob: formattedDate,
+          dob: date,
         }),
       });
       if (response.ok) {
