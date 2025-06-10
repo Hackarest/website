@@ -6,15 +6,16 @@ import { Romanian } from "flatpickr/dist/l10n/ro.js";
 import { useAuth } from "@clerk/clerk-react";
 
 const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
-  const handleDateChange = (_selectedDates: Date[]) => {
-    const dateOnly = _selectedDates[0].toISOString().split("T")[0];
-    setDate(dateOnly);
+  const handleDateChange = (_selectedDates: Date[], dateStr: string) => {
+    setDate(dateStr);
+    setIsoDate(_selectedDates[0]);
   };
   const { getToken } = useAuth();
 
   const [name, setName] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [date, setDate] = useState<string | null>(null);
+  const [isoDate, setIsoDate] = useState<Date | null>(null);
   const [about, setAbout] = useState<string | null>(null);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [error, setError] = useState(false);
@@ -38,6 +39,10 @@ const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
       return;
     try {
       const token = await getToken();
+      const pad = (n: number) => n.toString().padStart(2, "0");
+      const formattedDate =
+        isoDate &&
+        `${isoDate.getFullYear()}-${pad(isoDate.getMonth() + 1)}-${pad(isoDate.getDate())}`;
       const API_DOMAIN = import.meta.env.VITE_API_DOMAIN;
       const response = await fetch(`${API_DOMAIN}/api/apply`, {
         method: "POST",
@@ -49,7 +54,7 @@ const Apply = forwardRef<HTMLDivElement, object>((_props, ref) => {
           name,
           email,
           about,
-          dob: date,
+          dob: formattedDate,
         }),
       });
       if (response.ok) {

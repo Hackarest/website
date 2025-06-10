@@ -20,7 +20,7 @@ export default function DatePicker({
     const input = inputRef.current;
     if (input) {
       const today = new Date();
-      const maxDate = today.toISOString();
+      const maxDate = today.toISOString().split("T")[0];
       const minDate = new Date(
         today.getFullYear() - 18,
         today.getMonth(),

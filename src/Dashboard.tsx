@@ -10,9 +10,7 @@ export default function Dashboard() {
   const { getToken } = useAuth();
   const [applicants, setApplicants] = useState<any | null>(null);
   const [showReasonPopup, setShowReasonPopup] = useState(false);
-  const [selectedApplicant, setSelectedApplicant] = useState<any | null>(
-    null,
-  );
+  const [selectedApplicant, setSelectedApplicant] = useState<any | null>(null);
   const [denyReason, setDenyReason] = useState("");
   const [activeNotification, setActiveNotification] = useState<
     [string, string, string] | null
